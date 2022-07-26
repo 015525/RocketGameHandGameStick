@@ -5,7 +5,7 @@ import math
 
 
 
-class GameStick :
+class GameStick:
     def __init__(self):
         self.detector = hm.HandDetector(min_detection_confidence=0.75)
 
@@ -51,7 +51,7 @@ def main() :
         pTime = cTime
         stick.get_direction_and_shoot(img)
 
-        cv2.putText(img, f'FPS : {int(fps)}', (350, 50), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 3)
+        #cv2.putText(img, f'FPS : {int(fps)}', (350, 50), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 3)
         cv2.imshow("Image", img)
         ch = cv2.waitKey(1)
 
