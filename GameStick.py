@@ -31,16 +31,16 @@ class GameStick:
 
             xs1, ys1 = lm_list[6][1], lm_list[6][2]
             xs2, ys2 = lm_list[4][1], lm_list[4][2]
-            xs3, ys3 = lm_list[3][1], lm_list[3][2]
+            #xs3, ys3 = lm_list[3][1], lm_list[3][2]
             length = math.hypot(xs2 - xs1, ys2 - ys1)
             #print(length)
-            print(ys3, ys2)
-            if length < 30 and ys3-ys2 <= 20 :
+            #print(ys3, ys2)
+            if length < 30 :# and ys3-ys2 <= 20 :
                 shoot = True
             else:
                 shoot = False
 
-        return direction, shoot
+        return direction, shoot, lm_list
 
 
 def main() :

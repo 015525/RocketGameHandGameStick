@@ -2,15 +2,18 @@ import cv2
 from Rocket import Rocket
 import GameStick as gs
 import monster as ms
+import Choice as ch
 import time
 import random
 
-def main():
+choice = ch.Choice()
+
+def rocket_game_loop(highScore):
     wCam, hCam = 720, 480
     cap = cv2.VideoCapture(0)
     cap.set(3, wCam)
     cap.set(4, hCam)
-    pTime = 0
+    #pTime = 0
     rocMove=0
 
     message_box = [0,0]
@@ -28,12 +31,25 @@ def main():
 
     lives = 5
     score = 0
+    first_enter_q = True
     #locked=False
     while True:
         success, img = cap.read()
-        cTime = time.time()
-        fps = 1 / (cTime - pTime)
-        pTime = cTime
+        #user_choice = choice.get_choice(img)
+        # print(user_choice)
+        '''
+        if user_choice == "rocket game" :
+            
+        elif user_choice == "quit" :
+        '''
+
+
+        #cTime = time.time()
+        #fps = 1 / (cTime - pTime)
+        #pTime = cTime
+
+
+
 
         if noMonster :
             message_box[1] = 1
@@ -42,7 +58,7 @@ def main():
         if message_box[1] :
             noMonster=False
             if mFirst_enter :
-                mX= random.randint(30,600)
+                mX= random.randint(30,550)
                 mY= random.randint(15,100)
                 mFirst_enter=False
             if monStatus == "start" or monStatus == "continue" :
@@ -50,15 +66,21 @@ def main():
                 xMissPosInit, yMissPosInit = rocket.get_miss_position()
                 xRocPosInit, yRocPosInit = rocket.get_roc_position()
                 monStatus = monster.load_monster(img, monMove, mX,mY, xMissPosInit, yMissPosInit, xRocPosInit, yRocPosInit)
-                monMove+=5
+                if score < 25 :
+                    monMove+=5
+                else :
+                    monMove+=8
             else :
                 if monStatus == "killed the rocket" :
-                    print(monStatus)
+                    #print(monStatus)
                     lives-=1
                 elif monStatus == "killed by missle":
                     #print(monStatus)
                     score+=1
-                    missStatus = False
+                    message_box[0] = 0
+                    first_enter = True
+                    missStatus = True
+                    missMove = 0
                 else :
                     lives-=1
                 noMonster=True
@@ -70,16 +92,27 @@ def main():
 
         #loading rocket
         img = rocket.load_rocket(img, rocMove)
-        direction, shoot = stick.get_direction_and_shoot(img)
+        direction, shoot, lm_lsit = stick.get_direction_and_shoot(img)
+        num_fingures = choice.get_num_of_fingures(lm_lsit)
+        if num_fingures == 5 :
+            if first_enter_q:
+                pTime = time.time()
+                first_enter_q = False
+            cTime = time.time()
+            if (cTime - pTime) >= 2:
+                lives = 0
+        else :
+            first_enter_q = True
+
         if direction == "left":
             rocMove -= 5
         elif direction == "hard left":
-            print("iam here")
+            #print("iam here")
             rocMove -= 15
         elif direction == "right":
             rocMove += 5
         elif direction == "hard right":
-            print("iam here")
+            #print("iam here")
             rocMove += 15
 
         if shoot :
@@ -100,16 +133,17 @@ def main():
                 missMove=0
 
         if lives == 0:
-            break
+            return score
 
             #locked=True
 
         # cv2.putText(img, f'FPS : {int(fps)}', (350, 50), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 3)
 
         cv2.putText(img, f'Score : {score}', (10,35),  cv2.FONT_HERSHEY_PLAIN, 2, (255,0,0), 2)
+        cv2.putText(img, f'High Score : {highScore}', (370, 35), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 2)
         cv2.putText(img, f'Live : {lives}', (10, 70), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
         cv2.imshow("Image", img)
         ch = cv2.waitKey(1)
 
 if __name__ == "__main__":
-    main()
+    rocket_game_loop()
