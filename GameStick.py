@@ -10,7 +10,7 @@ class GameStick:
         self.detector = hm.HandDetector(min_detection_confidence=0.75)
 
     def get_direction_and_shoot(self, img):
-        img = self.detector.findHands(img)
+        img = self.detector.findHands(img, draw=False)
         lm_list = self.detector.find_position(img, draw=False)
 
         direction = ""
@@ -19,15 +19,23 @@ class GameStick:
             xu, yu= lm_list[5][1], lm_list[5][2]
             xl, yl= lm_list[17][1], lm_list[17][2]
 
-            if (xu - xl) >= 25 :
+            if (xu - xl) >= 75 :
+                direction = "hard left"
+            elif (xu - xl) >= 25 :
                 direction = "left"
+            elif (xl - xu) >= 75 :
+                direction = "hard right"
             elif (xl - xu) >= 25 :
                 direction = "right"
 
+
             xs1, ys1 = lm_list[6][1], lm_list[6][2]
             xs2, ys2 = lm_list[4][1], lm_list[4][2]
+            xs3, ys3 = lm_list[3][1], lm_list[3][2]
             length = math.hypot(xs2 - xs1, ys2 - ys1)
-            if length < 40:
+            #print(length)
+            print(ys3, ys2)
+            if length < 30 and ys3-ys2 <= 20 :
                 shoot = True
             else:
                 shoot = False

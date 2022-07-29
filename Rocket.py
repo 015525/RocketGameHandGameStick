@@ -11,8 +11,12 @@ class Rocket :
         self.missle_path = "Images/missle.png"
         self.y = 380
         self.x = 200
+        self.xMissPosInit = None
+        self.yMissPosInit = None
+        self.xRocPosInit = None
+        self.yRocPosInit = None
 
-    def load_rocket(self, img):
+    def load_rocket(self, img, move):
         rocket_img = cv2.imread(self.rocket_path)
         h,w,c = rocket_img.shape
         for i in range(h) :
@@ -21,20 +25,29 @@ class Rocket :
                     if rocket_img[i, j, k] == 0:
                         continue
                     else:
-                        if j+self.x >= 630 :
-                            self.x = 630-j
-                        elif j + self.x <= 30 :
-                            self.x = 30-j
-                        img[i+self.y, j+self.x, k] = rocket_img[i,j,k]
+                        if j+self.x+move >= 630 :
+                            self.x = 630-j-move
+                        elif j + self.x+move <= 30 :
+                            self.x = 30-j-move
+
+                        img[i+self.y, j+self.x+move, k] = rocket_img[i,j,k]
+
+        self.xRocPosInit = j+self.x+move-15 #15 is half the width of the rocket
+        self.yRocPosInit = i+self.y-45 #45 is half the height of the rocket
 
         return img
 
-    def move(self, img, direction):
+    '''
+        def move(self, img, direction):
         if direction == "left" :
+            self.xRocPosInit-=5
             self.x-=5
         elif direction == "right" :
+            self.xRocPosInit+=5
             self.x+=5
         self.load_rocket(img)
+    '''
+
 
     def shoot(self, img, move, x, y):
         status = self.load_missle(img, move, x, y)
@@ -53,84 +66,16 @@ class Rocket :
                             return False
                         img[i+y-55-move, j+x-20, k] = missle_img[i,j,k]
 
+        self.xMissPosInit = j + x - 20  - 35  # 35 is half the width of the missle
+        self.yMissPosInit = i + y - 55 - move - 35  # 35 is half the height of the missle
+
         return True
 
     def get_dimensions(self):
         return self.x, self.y
 
+    def get_roc_position(self):
+        return self.xRocPosInit, self.yRocPosInit
 
-def main():
-    wCam, hCam = 720, 480
-    cap = cv2.VideoCapture(0)
-    cap.set(3, wCam)
-    cap.set(4, hCam)
-    pTime = 0
-
-    message_box = [0,0,0,0,0]
-    rocket = Rocket()
-    stick = gs.GameStick()
-    monster = ms.monster()
-    move=0
-    first_enter = True
-    status = True
-
-    mMove = 0
-    mFirst_enter=True
-    mStatus=True
-    noMonster=True
-    #locked=False
-    while True:
-        success, img = cap.read()
-        cTime = time.time()
-        fps = 1 / (cTime - pTime)
-        pTime = cTime
-
-        if noMonster :
-            message_box[1] = 1
-
-        #loading monster
-        if message_box[1] :
-            noMonster=False
-            if mFirst_enter :
-                mX= random.randint(30,640)
-                mY= random.randint(15,200)
-                mFirst_enter=False
-            if mStatus :
-                mStatus = monster.load_monster(img, mMove, mX,mY)
-                mMove+=5
-            else:
-                noMonster=True
-                message_box[1]=0
-                mFirst_enter=True
-                mStatus=True
-                mMove=0
-
-        #loading rocket
-        img = rocket.load_rocket(img)
-        direction, shoot = stick.get_direction_and_shoot(img)
-        rocket.move(img, direction)
-        if shoot :
-            message_box[0]=1
-
-        if message_box[0]:
-            if first_enter:
-                x,y = rocket.get_dimensions()
-                first_enter = False
-            if status:
-                status = rocket.shoot(img,move,x,y)
-                move += 15
-            else:
-                message_box[0]=0
-                first_enter=True
-                status=True
-                move=0
-
-
-            #locked=True
-
-        cv2.putText(img, f'FPS : {int(fps)}', (350, 50), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 3)
-        cv2.imshow("Image", img)
-        ch = cv2.waitKey(1)
-
-if __name__ == "__main__":
-    main()
+    def get_miss_position(self):
+        return self.xMissPosInit, self.yMissPosInit
