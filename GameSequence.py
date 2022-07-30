@@ -26,7 +26,7 @@ def quit_screen():
             break
         success, img = cap.read()
         cv2.putText(img, f'Thank You For Your Time :)', (100, 230), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 2)
-        cv2.imshow("Image", img)
+        cv2.imshow("Rocket Game", img)
         ch = cv2.waitKey(1)
 
 def quit_game_screen(highScore, score):
@@ -74,7 +74,7 @@ def quit_game_screen(highScore, score):
                 return "quit_game"
         else:
             first_enter_2 = True
-        cv2.imshow("Image", img)
+        cv2.imshow("Rocket Game", img)
         ch = cv2.waitKey(1)
 
 while user_choice == "rocket_game" :

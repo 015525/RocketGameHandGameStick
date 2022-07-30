@@ -58,7 +58,7 @@ def rocket_game_loop(highScore):
         if message_box[1] :
             noMonster=False
             if mFirst_enter :
-                mX= random.randint(30,550)
+                mX= random.randint(30,530)
                 mY= random.randint(15,100)
                 mFirst_enter=False
             if monStatus == "start" or monStatus == "continue" :
@@ -66,10 +66,12 @@ def rocket_game_loop(highScore):
                 xMissPosInit, yMissPosInit = rocket.get_miss_position()
                 xRocPosInit, yRocPosInit = rocket.get_roc_position()
                 monStatus = monster.load_monster(img, monMove, mX,mY, xMissPosInit, yMissPosInit, xRocPosInit, yRocPosInit)
-                if score < 25 :
+                if score < 10 :
                     monMove+=5
-                else :
+                elif score < 25 :
                     monMove+=8
+                else :
+                    monMove += 12
             else :
                 if monStatus == "killed the rocket" :
                     #print(monStatus)
@@ -142,7 +144,7 @@ def rocket_game_loop(highScore):
         cv2.putText(img, f'Score : {score}', (10,35),  cv2.FONT_HERSHEY_PLAIN, 2, (255,0,0), 2)
         cv2.putText(img, f'High Score : {highScore}', (370, 35), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 0), 2)
         cv2.putText(img, f'Live : {lives}', (10, 70), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
-        cv2.imshow("Image", img)
+        cv2.imshow("Rocket Game", img)
         ch = cv2.waitKey(1)
 
 if __name__ == "__main__":

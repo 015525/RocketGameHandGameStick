@@ -55,7 +55,7 @@ def choice() :
         else:
             first_enter_2 = True
 
-        cv2.imshow("Image", img)
+        cv2.imshow("Rocket Game", img)
         ch = cv2.waitKey(1)
 
 if __name__ == "__main__" :

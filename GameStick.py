@@ -35,7 +35,8 @@ class GameStick:
             length = math.hypot(xs2 - xs1, ys2 - ys1)
             #print(length)
             #print(ys3, ys2)
-            if length < 30 :# and ys3-ys2 <= 20 :
+            if length < 40 :# and ys3-ys2 <= 20 :
+                #print(length)
                 shoot = True
             else:
                 shoot = False
