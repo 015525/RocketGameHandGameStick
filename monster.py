@@ -11,22 +11,21 @@ class monster :
         ##print(h, w, c)
         for i in range(h):
             for j in range(w):
-                for k in range(c):
-                    if monster_img[i, j, k] == 255:
-                        continue
-                    else:
-                        if i+y+move >= 460 :
-                            return "ground hit"
-                        if j+x >= 600 :
-                            x =  630-j
-                        #print(xRocPos, yRocPos)
-                        if xMissPos and yMissPos and abs((i+y+move) - yMissPos) <= 10 and abs((j+x) - xMissPos) <= 10:
-                            return "killed by missle"
-                        if xRocPos and yRocPos and abs((i+y+move) - yRocPos) <= 10 and abs((j+x) - xRocPos) <= 10:
-                            #print("iam here")
-                            return "killed the rocket"
+                if monster_img[i, j,0] == 255 and monster_img[i, j,1] == 255 and monster_img[i, j,2] == 255 :
+                    continue
+                else:
+                    if i+y+move >= 460 :
+                        return "ground hit"
+                    if j+x >= 600 :
+                        x =  630-j
+                    #print(xRocPos, yRocPos)
+                    if xMissPos and yMissPos and abs((i+y+move) - yMissPos) <= 10 and abs((j+x) - xMissPos) <= 10:
+                        return "killed by missle"
+                    if xRocPos and yRocPos and abs((i+y+move) - yRocPos) <= 10 and abs((j+x) - xRocPos) <= 10:
+                        #print("iam here")
+                        return "killed the rocket"
 
-                        img[i+y+move, j+x, k] = monster_img[i,j,k]
+                    img[i+y+move, j+x] = monster_img[i,j]
                         #print(i+y+move)
         self.xMonsPos = j + x - 27  # 27 is half the width of the missle
         self.yMonsPos = i + y + move - 27  # 27 is half the height of the missle

@@ -21,16 +21,15 @@ class Rocket :
         h,w,c = rocket_img.shape
         for i in range(h) :
             for j in range(w) :
-                for k in range(c) :
-                    if rocket_img[i, j, k] == 0:
-                        continue
-                    else:
-                        if j+self.x+move >= 630 :
-                            self.x = 630-j-move
-                        elif j + self.x+move <= 30 :
-                            self.x = 30-j-move
+                if rocket_img[i, j].all() == 0:
+                    continue
+                else:
+                    if j+self.x+move >= 630 :
+                        self.x = 630-j-move
+                    elif j + self.x+move <= 30 :
+                        self.x = 30-j-move
 
-                        img[i+self.y, j+self.x+move, k] = rocket_img[i,j,k]
+                    img[i+self.y, j+self.x+move] = rocket_img[i,j]
 
         self.xRocPosInit = j+self.x+move-15 #15 is half the width of the rocket
         self.yRocPosInit = i+self.y-45 #45 is half the height of the rocket
@@ -58,13 +57,12 @@ class Rocket :
         h,w,c = missle_img.shape
         for i in range(h) :
             for j in range(w) :
-                for k in range(c) :
-                    if missle_img[i, j, k] == 0:
-                        continue
-                    else:
-                        if i+y-55-move <= 30 :
-                            return False
-                        img[i+y-55-move, j+x-20, k] = missle_img[i,j,k]
+                if missle_img[i, j].all() == 0:
+                    continue
+                else:
+                    if i+y-55-move <= 30 :
+                        return False
+                    img[i+y-55-move, j+x-20] = missle_img[i,j]
 
         self.xMissPosInit = j + x - 20  - 35  # 35 is half the width of the missle
         self.yMissPosInit = i + y - 55 - move - 35  # 35 is half the height of the missle
